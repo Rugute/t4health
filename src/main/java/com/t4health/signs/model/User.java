@@ -40,6 +40,29 @@ public class User {
 
     private LocalDateTime updatedAt;
 
+    // ===== Lifecycle Callbacks =====
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // ===== Constructors =====
+    public User() {}
+
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
+
+    // ===== Getters & Setters =====
+
     public Long getId() {
         return id;
     }
