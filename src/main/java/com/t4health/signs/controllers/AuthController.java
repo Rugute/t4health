@@ -8,10 +8,9 @@ import com.t4health.signs.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -20,6 +19,10 @@ public class AuthController {
 
     public AuthController(UserService service) {
         this.service = service;
+    }
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello, the time at the server is now " + new Date() + "\n";
     }
 
     @PostMapping("/register")
