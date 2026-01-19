@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,14 +27,14 @@ public class AuthController {
     private final PasswordEncoder encoder;
     private final JwtUtil jwtUtil;
 
-    private final UserService service;
+    private final UserService userService;
 
 
-    public AuthController(UserRepository repo, PasswordEncoder encoder, JwtUtil jwtUtil,UserService service) {
+    public AuthController(UserRepository repo, PasswordEncoder encoder, JwtUtil jwtUtil,UserService userService) {
         this.repo = repo;
         this.encoder = encoder;
         this.jwtUtil = jwtUtil;
-        this.service = service;
+        this.userService = userService;
     }
 
     @GetMapping("/hello")
@@ -64,20 +65,17 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("token", token));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(
-            @Valid @RequestBody RegisterRequest request
-    ) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(service.register(request));
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> userList() {
+        List<User> users = userService.getAll();
+        return ResponseEntity.ok(users);  // Spring Boot automatically converts to JSON
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(
             @Valid @RequestBody LoginRequest request
     ) {
-        User user = service.authenticate(request.getEmail(), request.getPassword());
+        User user = userService.authenticate(request.getEmail(), request.getPassword());
         return ResponseEntity.ok("Login successful for " + user.getEmail());
     }
 }

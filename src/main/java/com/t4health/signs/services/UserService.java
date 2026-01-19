@@ -7,6 +7,8 @@ import com.t4health.signs.repositories.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -52,5 +54,8 @@ public class UserService {
         res.setActive(user.isActive());
         res.setCreatedAt(user.getCreatedAt());
         return res;
+    }
+    public List<User> getAll(){
+        return repository.findAll();
     }
 }

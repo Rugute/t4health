@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Input from "../components/Input";
+import Cookies from "js-cookie"; // Import Cookies library
 
 export default function Signin() {
   const navigate = useNavigate();
@@ -24,11 +25,12 @@ export default function Signin() {
       });
 
       // 🔐 Save JWT
-      localStorage.setItem("token", res.data.token);
-
+      // localStorage.setItem("token", res.data.token);
+      Cookies.set('token', JSON.stringify(res.data.token));
       // optional: save user info
       if (res.data.user) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+        Cookies.set('user', JSON.stringify(res.data.user));
+        //localStorage.setItem("user", JSON.stringify(res.data.user));
       }
 
       navigate("/dashboard");
