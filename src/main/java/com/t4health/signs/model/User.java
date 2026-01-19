@@ -35,6 +35,9 @@ public class User {
     @Column(nullable = false)
     private boolean active = true;
 
+    private String role = "USER";
+
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
@@ -125,5 +128,13 @@ public class User {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
