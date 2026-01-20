@@ -8,6 +8,7 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private String email;
+    private String phone;
     private boolean active;
     private LocalDateTime createdAt;
 
@@ -57,5 +58,13 @@ public class UserResponse {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

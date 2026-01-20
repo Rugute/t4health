@@ -1,11 +1,11 @@
 package com.t4health.signs.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
+@Entity
+@Table(name = "visits")
 public class Visit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

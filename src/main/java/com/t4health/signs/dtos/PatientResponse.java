@@ -1,45 +1,23 @@
-package com.t4health.signs.model;
+package com.t4health.signs.dtos;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
-@Entity
-@Table(name = "patients")
-public class Patient {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+import java.time.LocalDateTime;
+
+public class PatientResponse {
     private Long id;
-
-    @NotBlank(message = "First name is required")
-    @Column(nullable = false)
     private String firstName;
-
-    @Column(nullable = true)
     private String middleName;
-
-    @NotBlank(message = "Last name is required")
-    @Column(nullable = false)
     private String lastName;
-
     private String sex;
-
-    @NotBlank(message = "Identifier is required")
-    @Column(nullable = false)
     private String identifier;
-
     private String idno;
-    private int voided;
-
-    @NotBlank(message = "Date of Birth is required")
-    @Column(nullable = false)
     private String dob;
-
-    @NotBlank(message = "Phone Number is required")
-    @Column(nullable = false)
     private String contacts;
-
-    @NotBlank(message = "Address is required")
-    @Column(nullable = false)
     private String address;
 
     public Long getId() {
@@ -120,13 +98,5 @@ public class Patient {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public int getVoided() {
-        return voided;
-    }
-
-    public void setVoided(int voided) {
-        this.voided = voided;
     }
 }

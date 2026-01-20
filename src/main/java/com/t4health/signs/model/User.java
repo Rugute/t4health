@@ -27,16 +27,15 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters")
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private boolean active = true;
 
     private String role = "USER";
-
+    private String phone ;
+    private int voided ;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -57,11 +56,12 @@ public class User {
     // ===== Constructors =====
     public User() {}
 
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String firstName, String lastName, String email, String password,String phone) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.phone=phone;
     }
 
     // ===== Getters & Setters =====
@@ -136,5 +136,21 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public int getVoided() {
+        return voided;
+    }
+
+    public void setVoided(int voided) {
+        this.voided = voided;
     }
 }

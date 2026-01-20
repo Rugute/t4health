@@ -1,12 +1,10 @@
 package com.t4health.signs.controllers;
 
 import com.t4health.signs.dtos.LoginRequest;
-import com.t4health.signs.dtos.RegisterRequest;
-import com.t4health.signs.dtos.UserResponse;
 import com.t4health.signs.model.User;
 import com.t4health.signs.repositories.UserRepository;
 import com.t4health.signs.services.UserService;
-import com.t4health.signs.utils.Diagnosis;
+import com.t4health.signs.utils.DiagnosisChecker;
 import com.t4health.signs.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     private final UserService userService;
+    //private final DiagnosisChecker diagnosisChecker;
 
 
     public AuthController(UserRepository repo, PasswordEncoder encoder, JwtUtil jwtUtil,UserService userService) {
@@ -35,22 +34,75 @@ public class AuthController {
         this.encoder = encoder;
         this.jwtUtil = jwtUtil;
         this.userService = userService;
+       // this.diagnosisChecker=diagnosisChecker;
     }
 
     @GetMapping("/hello")
     public String hello() {
         //String xx = Diagnosis.
-        Diagnosis diagnosisResult = new Diagnosis();
-        String xx = diagnosisResult.checker();
-        return "Hello, the time at the server is now " + new Date() + " "+xx+ "\n";
+       // DiagnosisChecker diagnosisResult = new DiagnosisChecker();
+       // String xx = diagnosisChecker.checker();
+        return "Hello, the time at the server is now " + new Date() + " \n";
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody User user) {
+        if (repo.existsByEmail(user.getEmail())) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Email already exists");
+        }
+
         user.setPassword(encoder.encode(user.getPassword()));
         repo.save(user);
-        return ResponseEntity.ok("User registered");
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User registered successfully");
     }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long id,
+            @RequestBody User updatedUser) {
+
+        User user = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Prevent duplicate email (excluding current user)
+        if (!user.getEmail().equals(updatedUser.getEmail())
+                && repo.existsByEmail(updatedUser.getEmail())) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Email already exists");
+        }
+
+        user.setFirstName(updatedUser.getFirstName());
+        user.setLastName(updatedUser.getLastName());
+        user.setEmail(updatedUser.getEmail());
+        user.setPhone(updatedUser.getPhone());
+
+        // Only update password if provided
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+            user.setPassword(encoder.encode(updatedUser.getPassword()));
+        }
+
+        repo.save(user);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User updated successfully");
+    }
+
+    @GetMapping("/users/delete/{id}")
+    public ResponseEntity<?> deleteUser(
+            @PathVariable Long id) {
+        User user = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setVoided(1);
+        repo.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User deleted successfully");
+    }
+
 
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody Map<String, String> req) {
